@@ -7,7 +7,7 @@ import (
 )
 
 type RegisterStorage interface {
-	FindUser(ctx context.Context, condition map[string]interface{}, moreInfos ...string) (*usermodel.User, error)
+	FindUser(ctx context.Context, conditions map[string]interface{}, moreInfos ...string) (*usermodel.User, error)
 	CreateUser(ctx context.Context, data *usermodel.UserCreate) error
 }
 
