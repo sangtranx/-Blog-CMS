@@ -7,6 +7,8 @@ require (
 	gorm.io/gorm v1.25.12
 )
 
+require github.com/btcsuite/btcutil v1.0.2 // indirect
+
 require (
 	github.com/bytedance/sonic v1.12.7 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect

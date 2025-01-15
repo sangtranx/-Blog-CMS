@@ -34,6 +34,10 @@ func (User) TableName() string {
 	return "users"
 }
 
+func (u *User) Mask(isAdmin bool) {
+	u.GenUID(common.DbTypeUser)
+}
+
 type UserCreate struct {
 	common.SQLModel `json:",inline"`
 	Email           string `json:"email" gorm:"column:email"`
@@ -46,6 +50,10 @@ type UserCreate struct {
 }
 
 func (UserCreate) TableName() string { return User{}.TableName() }
+
+func (u *UserCreate) Mask(isAdmin bool) {
+	u.GenUID(common.DbTypeUser)
+}
 
 var (
 	ErrEmailnameOrPasswordInvalid = common.NewCustomError(
