@@ -1,8 +1,20 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
+
+	//dsn := os.Getenv("BLOG_CMS")
+	//
+	//db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	//
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//db = db.Debug()
 
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
