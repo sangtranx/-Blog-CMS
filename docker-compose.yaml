@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: blogcms
+      MYSQL_USER: blogcms
+      MYSQL_PASSWORD: S@ng0905257554
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7.0
+    container_name: redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  mysql_data:
