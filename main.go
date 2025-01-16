@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Blog-CMS/component/initialize"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +16,9 @@ func main() {
 	//}
 	//
 	//db = db.Debug()
+
+	// load config
+	initialize.LoadConfig()
 
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {

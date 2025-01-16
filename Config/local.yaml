@@ -1,0 +1,17 @@
+server:
+  port: 8082
+  mode: "dev"
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  username: blogcms
+  password: S@ng0905257554
+  dbname: blogcms
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifetime: 3600
+redis:
+  host: 127.0.0.1
+  port: 6331
+  password:
+  database: 0
