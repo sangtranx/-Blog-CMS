@@ -1,8 +1,10 @@
 package initialize
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
-func run() *gin.Engine {
+func RunInit() *gin.Engine {
 	LoadConfig()
 
 	InitMysql()
