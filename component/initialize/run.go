@@ -6,6 +6,7 @@ func run() *gin.Engine {
 	LoadConfig()
 
 	InitMysql()
+	InitRedis()
 
 	r := InitRouter()
 
