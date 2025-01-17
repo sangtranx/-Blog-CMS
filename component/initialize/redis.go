@@ -10,7 +10,7 @@ import (
 
 var ctx = context.Background()
 
-func InitRedis() {
+func InitRedis() *redis.Client {
 
 	r := common.Config.Redis
 
@@ -27,5 +27,5 @@ func InitRedis() {
 		log.Fatalln(rdb, err)
 	}
 
-	common.Rdb = rdb
+	return rdb
 }

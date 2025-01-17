@@ -5,6 +5,6 @@ import (
 	"Blog-CMS/component/package/logger"
 )
 
-func InitLogger() {
-	common.Logger = logger.NewLogger(common.Config.Logger)
+func InitLogger() *logger.LoggerZap {
+	return logger.NewLogger(common.Config.Logger)
 }

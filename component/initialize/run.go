@@ -1,19 +1,19 @@
 package initialize
 
 import (
-	"Blog-CMS/common"
+	"Blog-CMS/component/appctx"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
-func RunInit() *gin.Engine {
+func RunInit() (*gin.Engine, appctx.AppContext) {
 	LoadConfig()
-	InitLogger()
-	common.Logger.Info("Config Log ok!!", zap.String("ok", "success"))
 
-	InitRedis()
+	db := InitMysql()
+	logger := InitLogger()
+	redis := InitRedis()
+	appCtx := appctx.NewAppContext(db, redis, logger)
 
 	r := InitRouter()
 
-	return r
+	return r, appCtx
 }
