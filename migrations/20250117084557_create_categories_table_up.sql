@@ -10,7 +10,6 @@ CREATE TABLE categories (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-
 -- +goose StatementEnd
 
 -- +goose Down

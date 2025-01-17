@@ -32,8 +32,9 @@ func (business *registerBusiness) Register(ctx context.Context, data *usermodel.
 		return usermodel.ErrEmailExisted
 	}
 
-	Salt := common.GenSalt(50)
-	data.Password = business.hasher.Hash(data.Password + Salt)
+	salt := common.GenSalt(50)
+	data.Password = business.hasher.Hash(data.Password + salt)
+	data.Salt = salt
 	data.Role = "User"
 
 	if err := business.storage.CreateUser(ctx, data); err != nil {

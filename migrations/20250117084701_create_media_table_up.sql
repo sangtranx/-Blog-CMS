@@ -14,7 +14,6 @@ CREATE TABLE media (
    FOREIGN KEY (content_id) REFERENCES content(content_id) ON DELETE CASCADE
 );
 
-
 -- +goose StatementEnd
 
 -- +goose Down
