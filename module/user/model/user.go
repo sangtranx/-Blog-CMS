@@ -55,6 +55,11 @@ func (u *UserCreate) Mask(isAdmin bool) {
 	u.GenUID(common.DbTypeUser)
 }
 
+type UserLogin struct {
+	Email    string `json:"email" gorm:"email"`
+	Password string `json:"password" gorm:"password"`
+}
+
 var (
 	ErrEmailnameOrPasswordInvalid = common.NewCustomError(
 		errors.New("email or password invalid"),

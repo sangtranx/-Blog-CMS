@@ -9,4 +9,5 @@ import (
 func SetupGroup(appCtx appctx.AppContext, v1 *gin.RouterGroup) {
 
 	v1.POST("/register", usertransport.Register(appCtx))
+	v1.POST("/authenticate", usertransport.Login(appCtx))
 }
