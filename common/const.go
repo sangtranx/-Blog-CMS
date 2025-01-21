@@ -8,8 +8,13 @@ const (
 	DbTypeRestaurant = 1
 	DbTypeUser       = 2
 )
+
 const (
 	CurrentUser = "user"
+)
+
+const(
+	AdminRole = "admin"
 )
 
 type Requester interface {

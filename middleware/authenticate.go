@@ -59,8 +59,6 @@ func RequireAuth(appCtx appctx.AppContext) func(c *gin.Context) {
 			panic(err)
 		}
 
-		user.Mask(false)
-
 		c.Set(common.CurrentUser, user)
 		c.Next()
 	}
