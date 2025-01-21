@@ -13,6 +13,7 @@ func main() {
 
 	blog := r.Group("/blog")
 
+	SetupAdminRoute(appCtx, blog)
 	SetupGroup(appCtx, blog)
 
 	r.Run() // listen and serve on 0.0.0.0:8080
