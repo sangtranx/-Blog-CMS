@@ -44,10 +44,13 @@ func (s *sqlStorage) ListDataWithCondition(
 		return nil, common.ErrDB(err)
 	}
 
-	if len(result) != 0 {
+	if len(result) > 0 {
 		last := result[len(result)-1]
 		last.Mask(last.GetRole() == common.AdminRole)
-		paging.NextCursor = last.FakeId.String()
+
+		if len(result) > 2 {
+			paging.NextCursor = last.FakeId.String()
+		}
 	}
 
 	return result, nil
