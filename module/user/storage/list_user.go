@@ -31,7 +31,7 @@ func (s *sqlStorage) ListDataWithCondition(
 			return nil, common.ErrDB(err)
 		}
 
-		db = db.Where("id < ?", uid.GetLocalID())
+		db = db.Where("id <= ?", uid.GetLocalID())
 	} else {
 		offset := (paging.Page - 1) * paging.Limit
 		db = db.Offset(offset)
@@ -42,6 +42,12 @@ func (s *sqlStorage) ListDataWithCondition(
 		Order("id desc").
 		Find(&result).Error; err != nil {
 		return nil, common.ErrDB(err)
+	}
+
+	if len(result) != 0 {
+		last := result[len(result)-1]
+		last.Mask(last.GetRole() == common.AdminRole)
+		paging.NextCursor = last.FakeId.String()
 	}
 
 	return result, nil
