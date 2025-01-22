@@ -13,6 +13,68 @@ info:
   title: API Document Blog-CMS
   version: 1.0.0
 paths:
+  /admin/userProfile:
+    get:
+      consumes:
+      - application/json
+      description: Get the profile of a user by their ID
+      parameters:
+      - description: User ID in base58 format
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved user profile
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid user ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get user profile by ID
+      tags:
+      - users
+  /admin/users:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved user list
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get all users
+      tags:
+      - users
   /authenticate:
     post:
       consumes:
@@ -140,45 +202,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get a list of users
-      tags:
-      - users
-  /userProfile:
-    get:
-      consumes:
-      - application/json
-      description: Get the profile of a user by their ID
-      parameters:
-      - description: User ID in base58 format
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully retrieved user profile
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Invalid user ID
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: User not found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties: true
-            type: object
-      security:
-      - ApiKeyAuth: []
-      summary: Get user profile by ID
       tags:
       - users
 swagger: "2.0"

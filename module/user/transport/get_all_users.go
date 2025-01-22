@@ -17,7 +17,7 @@ import (
 // @Security ApiKeyAuth
 // @Success 200 {object} map[string]interface{} "Successfully retrieved user list"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
-// @Router /user/paging [get]
+// @Router /admin/users [get]
 func GetAllUser(appCtx appctx.AppContext) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
