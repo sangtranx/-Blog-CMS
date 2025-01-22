@@ -13,7 +13,6 @@ func SetupAdminRoute(appCtx appctx.AppContext, v1 *gin.RouterGroup) {
 		middleware.RoleRequired(appCtx, "admin", "mod"),
 	)
 	{
-		admin.GET("/profile", usertransport.Profile(appCtx))
 		admin.GET("/userProfile", usertransport.GetUserProfile(appCtx))
 		admin.GET("/users", usertransport.GetAllUser(appCtx))
 	}
