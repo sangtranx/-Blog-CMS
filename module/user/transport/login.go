@@ -12,6 +12,17 @@ import (
 	"net/http"
 )
 
+// Login godoc
+// @Summary Authenticate user
+// @Description Authenticate user with email and password
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} map[string]interface{} "Successfully authenticated"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 401 {object} map[string]interface{} "Unauthorized"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /authenticate [post]
 func Login(appCtx appctx.AppContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 

@@ -9,6 +9,20 @@ import (
 	"net/http"
 )
 
+// ListUser godoc
+// @Summary Get a list of users
+// @Description Get a paginated list of users
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param page query int false "Page number" default(1)
+// @Param limit query int false "Number of items per page" default(10)
+// @Success 200 {object} map[string]interface{} "Successfully retrieved user list"
+// @Failure 400 {object} map[string]interface{} "Invalid query parameters"
+// @Failure 401 {object} map[string]interface{} "Unauthorized"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /user/paging [get]
 func ListUser(appCtx appctx.AppContext) gin.HandlerFunc {
 
 	return func(c *gin.Context) {

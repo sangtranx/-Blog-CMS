@@ -8,6 +8,16 @@ import (
 	"net/http"
 )
 
+// GetAllUser godoc
+// @Summary Get all users
+// @Description Get a list of all users
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Success 200 {object} map[string]interface{} "Successfully retrieved user list"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /user/paging [get]
 func GetAllUser(appCtx appctx.AppContext) gin.HandlerFunc {
 
 	return func(c *gin.Context) {

@@ -8,6 +8,19 @@ import (
 	"net/http"
 )
 
+// GetUserProfile godoc
+// @Summary Get user profile by ID
+// @Description Get the profile of a user by their ID
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param id query string true "User ID in base58 format"
+// @Success 200 {object} map[string]interface{} "Successfully retrieved user profile"
+// @Failure 400 {object} map[string]interface{} "Invalid user ID"
+// @Failure 404 {object} map[string]interface{} "User not found"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /userProfile [get]
 func GetUserProfile(appCtx appctx.AppContext) gin.HandlerFunc {
 
 	return func(c *gin.Context) {

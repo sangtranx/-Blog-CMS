@@ -11,6 +11,16 @@ import (
 	"net/http"
 )
 
+// Register godoc
+// @Summary Register a new user
+// @Description Register a new user with the provided information
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} map[string]interface{} "Successfully registered"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /register [post]
 func Register(appCtx appctx.AppContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 
