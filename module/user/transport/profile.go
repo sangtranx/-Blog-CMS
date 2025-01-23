@@ -14,9 +14,10 @@ import (
 // @Accept  json
 // @Produce  json
 // @Security ApiKeyAuth
-// @Success 200 {object} map[string]interface{} "Successfully retrieved profile"
-// @Failure 401 {object} map[string]interface{} "Unauthorized"
-// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Param Authorization header string true "Bearer <Token>"
+// @Success 200 {object} common.SuccessRes
+// @Failure 401 {object} common.AppError
+// @Failure 500 {object} common.AppError
 // @Router /profile [get]
 func Profile(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {

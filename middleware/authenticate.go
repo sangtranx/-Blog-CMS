@@ -18,14 +18,25 @@ func ErrWrongAuthHeader(err error) *common.AppError {
 }
 
 func extractTokenFromHeaderString(s string) (string, error) {
-	parts := strings.Split(s, " ")
+	// Trim any leading or trailing whitespace
+	s = strings.TrimSpace(s)
 
-	// Ensure the header has the correct format
-	if len(parts) < 2 || parts[0] != "Bearer" || strings.TrimSpace(parts[1]) == "" {
-		return "", ErrWrongAuthHeader(fmt.Errorf("invalid authorization header format"))
+	// Check if the header starts with "Bearer "
+	if strings.HasPrefix(s, "Bearer ") {
+		// Split the header into parts
+		parts := strings.Split(s, " ")
+		if len(parts) < 2 || strings.TrimSpace(parts[1]) == "" {
+			return "", ErrWrongAuthHeader(fmt.Errorf("invalid authorization header format"))
+		}
+		return parts[1], nil
 	}
 
-	return parts[1], nil
+	// If the header does not start with "Bearer ", assume it's just the token
+	if s == "" {
+		return "", ErrWrongAuthHeader(fmt.Errorf("empty authorization header"))
+	}
+
+	return s, nil
 }
 
 // 1.Get token from header

@@ -18,11 +18,12 @@ import (
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} map[string]interface{} "Successfully authenticated"
-// @Failure 400 {object} map[string]interface{} "Invalid input"
-// @Failure 401 {object} map[string]interface{} "Unauthorized"
-// @Failure 500 {object} map[string]interface{} "Internal server error"
-// @Router /authenticate [post]
+// @Param data body usermodel.UserLogin true "Login information"
+// @Success 200 {object} common.SuccessRes
+// @Failure 400 {object} common.AppError
+// @Failure 401 {object} common.AppError
+// @Failure 500 {object} common.AppError
+// @Router /login [post]
 func Login(appCtx appctx.AppContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 

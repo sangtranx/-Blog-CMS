@@ -16,10 +16,11 @@ import (
 // @Produce  json
 // @Security ApiKeyAuth
 // @Param id query string true "User ID in base58 format"
-// @Success 200 {object} map[string]interface{} "Successfully retrieved user profile"
-// @Failure 400 {object} map[string]interface{} "Invalid user ID"
-// @Failure 404 {object} map[string]interface{} "User not found"
-// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Param Authorization header string true "Bearer <Token>"
+// @Success 200 {object} common.SuccessRes
+// @Failure 400 {object} common.AppError
+// @Failure 401 {object} common.AppError
+// @Failure 500 {object} common.AppError
 // @Router /admin/userProfile [get]
 func GetUserProfile(appCtx appctx.AppContext) gin.HandlerFunc {
 

@@ -1,4 +1,54 @@
-basePath: /v1/2025
+basePath: /blog/
+definitions:
+  common.AppError:
+    properties:
+      key:
+        type: string
+      log:
+        type: string
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  common.SuccessRes:
+    properties:
+      data: {}
+      filter: {}
+      paging: {}
+    type: object
+  common.UID:
+    type: object
+  usermodel.UserCreate:
+    properties:
+      create_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        $ref: '#/definitions/common.UID'
+      last_name:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      role:
+        type: string
+      status:
+        type: integer
+      update_at:
+        type: string
+    type: object
+  usermodel.UserLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -24,29 +74,30 @@ paths:
         name: id
         required: true
         type: string
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully retrieved user profile
+          description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.SuccessRes'
         "400":
-          description: Invalid user ID
+          description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: User not found
+            $ref: '#/definitions/common.AppError'
+        "401":
+          description: Unauthorized
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
         "500":
-          description: Internal server error
+          description: Internal Server Error
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
       security:
       - ApiKeyAuth: []
       summary: Get user profile by ID
@@ -57,52 +108,67 @@ paths:
       consumes:
       - application/json
       description: Get a list of all users
+      parameters:
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully retrieved user list
+          description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.SuccessRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/common.AppError'
         "500":
-          description: Internal server error
+          description: Internal Server Error
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
       security:
       - ApiKeyAuth: []
       summary: Get all users
       tags:
       - users
-  /authenticate:
+  /login:
     post:
       consumes:
       - application/json
       description: Authenticate user with email and password
+      parameters:
+      - description: Login information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/usermodel.UserLogin'
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully authenticated
+          description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.SuccessRes'
         "400":
-          description: Invalid input
+          description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
         "401":
           description: Unauthorized
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
         "500":
-          description: Internal server error
+          description: Internal Server Error
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
       summary: Authenticate user
       tags:
       - users
@@ -111,24 +177,27 @@ paths:
       consumes:
       - application/json
       description: Get the profile of the authenticated user
+      parameters:
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully retrieved profile
+          description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.SuccessRes'
         "401":
           description: Unauthorized
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
         "500":
-          description: Internal server error
+          description: Internal Server Error
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
       security:
       - ApiKeyAuth: []
       summary: Get user profile
@@ -139,24 +208,28 @@ paths:
       consumes:
       - application/json
       description: Register a new user with the provided information
+      parameters:
+      - description: User registration data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/usermodel.UserCreate'
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully registered
+          description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.SuccessRes'
         "400":
-          description: Invalid input
+          description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
         "500":
-          description: Internal server error
+          description: Internal Server Error
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
       summary: Register a new user
       tags:
       - users
@@ -176,29 +249,30 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: Successfully retrieved user list
+          description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.SuccessRes'
         "400":
-          description: Invalid query parameters
+          description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
         "401":
           description: Unauthorized
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
         "500":
-          description: Internal server error
+          description: Internal Server Error
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/common.AppError'
       security:
       - ApiKeyAuth: []
       summary: Get a list of users

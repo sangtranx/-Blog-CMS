@@ -18,10 +18,11 @@ import (
 // @Security ApiKeyAuth
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Number of items per page" default(10)
-// @Success 200 {object} map[string]interface{} "Successfully retrieved user list"
-// @Failure 400 {object} map[string]interface{} "Invalid query parameters"
-// @Failure 401 {object} map[string]interface{} "Unauthorized"
-// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Param Authorization header string true "Bearer <Token>"
+// @Success 200 {object} common.SuccessRes
+// @Failure 400 {object} common.AppError
+// @Failure 401 {object} common.AppError
+// @Failure 500 {object} common.AppError
 // @Router /user/paging [get]
 func ListUser(appCtx appctx.AppContext) gin.HandlerFunc {
 

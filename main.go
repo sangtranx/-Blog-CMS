@@ -24,7 +24,7 @@ import (
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host      localhost:8080
-// @BasePath  /v1/2025
+// @BasePath  /blog/
 // @schema http
 func main() {
 
@@ -43,7 +43,7 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Open Swagger UI in browser
-	openBrowser("http://localhost:8080/swagger/index.html")
+	//openBrowser("http://localhost:8080/swagger/index.html")
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 

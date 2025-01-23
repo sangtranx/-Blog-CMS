@@ -15,8 +15,11 @@ import (
 // @Accept  json
 // @Produce  json
 // @Security ApiKeyAuth
-// @Success 200 {object} map[string]interface{} "Successfully retrieved user list"
-// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Param Authorization header string true "Bearer <Token>"
+// @Success 200 {object} common.SuccessRes
+// @Failure 400 {object} common.AppError
+// @Failure 401 {object} common.AppError
+// @Failure 500 {object} common.AppError
 // @Router /admin/users [get]
 func GetAllUser(appCtx appctx.AppContext) gin.HandlerFunc {
 
