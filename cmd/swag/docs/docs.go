@@ -262,7 +262,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/usermodel.UserCreate"
+                            "$ref": "#/definitions/usermodel.UserRegister"
                         }
                     }
                 ],
@@ -384,45 +384,18 @@ const docTemplate = `{
                 "paging": {}
             }
         },
-        "common.UID": {
-            "type": "object"
-        },
-        "usermodel.UserCreate": {
+        "usermodel.UserLogin": {
             "type": "object",
             "properties": {
-                "create_at": {
-                    "type": "string"
-                },
                 "email": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "$ref": "#/definitions/common.UID"
-                },
-                "last_name": {
                     "type": "string"
                 },
                 "password": {
                     "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "update_at": {
-                    "type": "string"
                 }
             }
         },
-        "usermodel.UserLogin": {
+        "usermodel.UserRegister": {
             "type": "object",
             "properties": {
                 "email": {

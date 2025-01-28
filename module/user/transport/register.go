@@ -17,7 +17,7 @@ import (
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Param data body usermodel.UserCreate true "User registration data"
+// @Param data body usermodel.UserRegister true "User registration data"
 // @Success 200 {object} common.SuccessRes
 // @Failure 400 {object} common.AppError
 // @Failure 500 {object} common.AppError

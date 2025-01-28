@@ -1,7 +1,17 @@
 
-# run main.go
-run:
-		go run main.go
+# Variables
+APP_NAME=Blog-CMS
+BUILD_DIR=bin
+SRC_DIR=.
+
+# Build executable
+build:
+	go build -o $(BUILD_DIR)/$(APP_NAME) $(SRC_DIR)
+
+# Run the application
+run: build
+	$(BUILD_DIR)/$(APP_NAME)
+
 
 # goose local
 DB_HOST=127.0.0.1

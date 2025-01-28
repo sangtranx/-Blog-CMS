@@ -55,6 +55,11 @@ func (u *UserCreate) Mask(isAdmin bool) {
 	u.GenUID(common.DbTypeUser)
 }
 
+type UserRegister struct {
+	Email    string `json:"email" gorm:"column:email"`
+	Password string `json:"password" gorm:"column:password"`
+}
+
 type UserLogin struct {
 	Email    string `json:"email" gorm:"email"`
 	Password string `json:"password" gorm:"password"`
