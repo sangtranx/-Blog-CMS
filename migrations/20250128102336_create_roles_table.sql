@@ -5,11 +5,10 @@ DROP TABLE IF EXISTS roles;
 
 -- +goose StatementBegin
 CREATE TABLE roles (
-   role_id INT AUTO_INCREMENT PRIMARY KEY,
-   role_name VARCHAR(50) NOT NULL UNIQUE,
-   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    role_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-
 -- +goose StatementEnd
 
 -- +goose Down
