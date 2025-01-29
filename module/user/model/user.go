@@ -27,6 +27,10 @@ func (u *User) GetEmail() string {
 }
 
 func (u *User) GetRole() string {
+	return u.Password
+}
+
+func (u *User) GetPassword() string {
 	return u.Role
 }
 
@@ -62,6 +66,10 @@ type UserRegister struct {
 
 type UserLogin struct {
 	Email    string `json:"email" gorm:"email"`
+	Password string `json:"password" gorm:"password"`
+}
+
+type UserChangePd struct {
 	Password string `json:"password" gorm:"password"`
 }
 

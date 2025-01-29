@@ -135,6 +135,59 @@
                 }
             }
         },
+        "/change/password": {
+            "post": {
+                "description": "Change a user's password with the provided information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Change password a user's password",
+                "parameters": [
+                    {
+                        "description": "User password changed",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/usermodel.UserChangePd"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003cToken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.SuccessRes"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/common.AppError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/common.AppError"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Authenticate user with email and password",
@@ -376,6 +429,14 @@
                 "data": {},
                 "filter": {},
                 "paging": {}
+            }
+        },
+        "usermodel.UserChangePd": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                }
             }
         },
         "usermodel.UserLogin": {
