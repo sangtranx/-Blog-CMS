@@ -7,9 +7,9 @@ import (
 )
 
 type ChangePasswordStorage interface {
-	FindUser(ctx context.Context, conditions map[string]interface{}, moreInfos ...string) (*usermodel.User, error)
 	UpdatePassword(ctx context.Context, userID int, hashedPassword, salt string) error
 }
+
 type changePasswordBiz struct {
 	storage ChangePasswordStorage
 	hasher  Hasher

@@ -24,6 +24,7 @@ import (
 // @Router /change/password [post]
 func UpdatePassword(appCtx appctx.AppContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
+
 		u := c.MustGet(common.CurrentUser).(common.Requester)
 
 		var req usermodel.UserChangePd
