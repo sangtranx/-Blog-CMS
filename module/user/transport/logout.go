@@ -31,7 +31,7 @@ func Logout(appCtx appctx.AppContext) func(ctx *gin.Context) {
 			return
 		}
 
-		expiry := 100
+		expiry := 60 * 60 * 24 * 30
 		err := cache.AddToBlackList(appCtx.GetRedisDBConnection(), token, expiry)
 
 		if err != nil {
