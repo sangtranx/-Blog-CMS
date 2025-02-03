@@ -8,8 +8,9 @@ import (
 	userbiz "Blog-CMS/module/user/biz"
 	usermodel "Blog-CMS/module/user/model"
 	userstorage "Blog-CMS/module/user/storage"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Login godoc
@@ -36,7 +37,7 @@ func Login(appCtx appctx.AppContext) func(ctx *gin.Context) {
 		}
 
 		storage := userstorage.NewSqlStorage(db)
-		tokenProvider := jwt.NewJWTProvider(appCtx.SecretKey())
+		tokenProvider := jwt.NewJWTProvider(appCtx.SecretKey(), appCtx.GetRedisDBConnection())
 		hasher := hasher2.NewSha256Hash()
 
 		biz := userbiz.NewLoginBusiness(storage, tokenProvider, hasher, 60*60*24*30)

@@ -3,6 +3,7 @@ package jwt
 import (
 	"Blog-CMS/component/tokenprovider"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/redis/go-redis/v9"
 	"time"
 )
 
@@ -10,6 +11,7 @@ import (
 
 type jwtProvider struct {
 	secret string
+	rdb    *redis.Client
 }
 
 func NewJWTProvider(secret string) *jwtProvider {

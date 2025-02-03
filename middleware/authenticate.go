@@ -6,8 +6,9 @@ import (
 	"Blog-CMS/component/tokenprovider/jwt"
 	userstorage "Blog-CMS/module/user/storage"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func ErrWrongAuthHeader(err error) *common.AppError {
@@ -45,7 +46,7 @@ func extractTokenFromHeaderString(s string) (string, error) {
 
 func RequireAuth(appCtx appctx.AppContext) func(c *gin.Context) {
 
-	tokenProvider := jwt.NewJWTProvider(appCtx.SecretKey())
+	tokenProvider := jwt.NewJWTProvider(appCtx.SecretKey(), appCtx.GetRedisDBConnection())
 
 	return func(c *gin.Context) {
 
