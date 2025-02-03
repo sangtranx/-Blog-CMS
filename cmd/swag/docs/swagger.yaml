@@ -194,6 +194,41 @@ paths:
       summary: Authenticate user
       tags:
       - users
+  /logout:
+    post:
+      consumes:
+      - application/json
+      description: log out user
+      parameters:
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SuccessRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/common.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: log out
+      tags:
+      - users
   /profile:
     get:
       consumes:

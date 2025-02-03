@@ -14,7 +14,7 @@ func RoleRequired(appCtx appctx.AppContext, allowRole ...string) func(c *gin.Con
 		u := c.MustGet(common.CurrentUser).(common.Requester)
 
 		hasFound := false
-		
+
 		for _, item := range allowRole {
 			if u.GetRole() == item {
 				hasFound = true

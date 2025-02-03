@@ -2,9 +2,11 @@ package jwt
 
 import (
 	"Blog-CMS/component/tokenprovider"
+	cache "Blog-CMS/component/utils"
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/redis/go-redis/v9"
-	"time"
 )
 
 // jwt : included Header, Payload, Signature
@@ -14,8 +16,8 @@ type jwtProvider struct {
 	rdb    *redis.Client
 }
 
-func NewJWTProvider(secret string) *jwtProvider {
-	return &jwtProvider{secret: secret}
+func NewJWTProvider(secret string, rdb *redis.Client) *jwtProvider {
+	return &jwtProvider{secret: secret, rdb: rdb}
 }
 
 type myclaim struct {
@@ -47,6 +49,12 @@ func (j *jwtProvider) Generate(data tokenprovider.TokenPayload, expiry int) (*to
 }
 
 func (j *jwtProvider) Validate(token string) (*tokenprovider.TokenPayload, error) {
+
+	isBlackListed := cache.IsTokenBlackListed(j.rdb, token)
+
+	if isBlackListed {
+		return nil, tokenprovider.ErrInvalidToken
+	}
 
 	res, err := jwt.ParseWithClaims(token, &myclaim{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(j.secret), nil

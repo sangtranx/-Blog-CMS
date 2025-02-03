@@ -27,7 +27,7 @@ func (u *User) GetEmail() string {
 }
 
 func (u *User) GetRole() string {
-	return u.Password
+	return u.Role
 }
 
 func (u *User) GetPassword() string {
