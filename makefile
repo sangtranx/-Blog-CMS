@@ -23,7 +23,9 @@ DB_DRIVER=mysql
 DSN=$(DB_USER):$(DB_PASSWORD)@tcp($(DB_HOST):$(DB_PORT))/$(DB_NAME)?charset=utf8mb4&parseTime=True&loc=Local
 
 # Thư mục migrations
+GOOSE_DBSTRING ?= "root:root1234@tcp(127.0.0.1:33306)/shopdevgo"
 MIGRATIONS_DIR=migrations
+GOOSE_DRIVER ?= mysql
 
 # Cài đặt Goose nếu chưa có
 install-goose:
@@ -42,3 +44,6 @@ migrate-status:
 migrate-create:
 	@if [ -z "$(NAME)" ]; then echo "Missing NAME. Use 'make migrate-create NAME=your_migration_name'"; exit 1; fi
 	goose -dir $(MIGRATIONS_DIR) create $(NAME) sql
+
+swag:
+	swag init -g ./cmd/server/main.go -o ./cmd/swag/docs
