@@ -3,6 +3,7 @@
 DROP TABLE IF EXISTS posts;
 -- +goose StatementEnd
 
+-- +goose StatementBegin
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -17,7 +18,6 @@ CREATE TABLE posts (
     FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL
 );
-
 -- +goose StatementEnd
 
 -- +goose Down
