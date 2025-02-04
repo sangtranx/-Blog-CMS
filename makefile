@@ -46,4 +46,4 @@ migrate-create:
 	goose -dir $(MIGRATIONS_DIR) create $(NAME) sql
 
 swag:
-	swag init -g ./cmd/server/main.go -o ./cmd/swag/docs
+	swag init -g ./main.go -o ./cmd/swag/docs

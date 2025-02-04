@@ -11,6 +11,7 @@ import (
 	"net/http"
 )
 
+// UpdatePassword godoc
 // @Summary Change password a user's password
 // @Description Change a user's password with the provided information
 // @Tags users

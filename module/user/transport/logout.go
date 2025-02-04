@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Login godoc
+// Logout godoc
 // @Summary log out
 // @Description log out user
 // @Tags users
