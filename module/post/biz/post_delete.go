@@ -24,9 +24,9 @@ func NewDeletePostBiz(storage DeletePostStorage, requester common.Requester) *de
 	return &deletePostBiz{storage: storage, requester: requester}
 }
 
-func (biz *deletePostBiz) DeletePost(ctx context.Context, id int) error {
+func (biz *deletePostBiz) DeletePost(ctx context.Context, postId int) error {
 
-	oldData, err := biz.storage.FindDataWithCondition(ctx, map[string]interface{}{"id": id})
+	oldData, err := biz.storage.FindDataWithCondition(ctx, map[string]interface{}{"id": postId})
 
 	if err != nil {
 		return common.ErrCannotDeleteEntity(postmodel.EntityName, err)
@@ -40,7 +40,7 @@ func (biz *deletePostBiz) DeletePost(ctx context.Context, id int) error {
 		return common.ErrNotPermission(err)
 	}
 
-	if err := biz.storage.Delete(ctx, id); err != nil {
+	if err := biz.storage.Delete(ctx, postId); err != nil {
 		return common.ErrCannotDeleteEntity(postmodel.EntityName, err)
 	}
 

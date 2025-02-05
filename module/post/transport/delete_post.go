@@ -27,7 +27,6 @@ func DeletePost(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
-
 		db := appCtx.GetMainDBConnection()
 		idStr := c.Query("id")
 

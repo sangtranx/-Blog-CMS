@@ -25,3 +25,12 @@ type PostCreate struct {
 }
 
 func (PostCreate) TableName() string { return Post{}.TableName() }
+
+type PostUpdate struct {
+	ID         int    `json:"id" gorm:"primaryKey"`
+	Title      string `json:"title" gorm:"type:varchar(255);not null"`
+	Content    string `json:"content" gorm:"type:text;not null"`
+	CategoryID *int   `json:"category_id" gorm:"default:null"`
+}
+
+func (PostUpdate) TableName() string { return Post{}.TableName() }

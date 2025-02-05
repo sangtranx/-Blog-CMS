@@ -30,6 +30,17 @@ definitions:
       title:
         type: string
     type: object
+  postmodel.PostUpdate:
+    properties:
+      category_id:
+        type: integer
+      content:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
   usermodel.UserChangePd:
     properties:
       password:
@@ -313,6 +324,43 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Delete a post with id
+      tags:
+      - posts
+  /post/update:
+    post:
+      consumes:
+      - application/json
+      description: create a new post
+      parameters:
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: post information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/postmodel.PostUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SuccessRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: create a new post
       tags:
       - posts
   /profile:
