@@ -279,6 +279,42 @@ paths:
       summary: create a new post
       tags:
       - posts
+  /post/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete a post with id
+      parameters:
+      - description: post id in base58 format
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SuccessRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a post with id
+      tags:
+      - posts
   /profile:
     get:
       consumes:

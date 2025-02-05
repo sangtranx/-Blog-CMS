@@ -21,4 +21,5 @@ func SetupGroup(appCtx appctx.AppContext, v1 *gin.RouterGroup) {
 
 	// post
 	v1.POST("/post/create", middleware.RequireAuth(appCtx), posttransport.CreateNewPost(appCtx))
+	v1.POST("/post/delete", middleware.RequireAuth(appCtx), posttransport.DeletePost(appCtx))
 }
