@@ -54,7 +54,7 @@ func (ps *localPubSub) Subscribe(ctx context.Context, topic pubsub.Topic) (ch <-
 	ps.locker.Unlock()
 
 	return c, func() {
-		log.Println("unsubscribe")
+		log.Println("unsubscribe topic", topic)
 
 		if chans, ok := ps.mapChannel[topic]; ok {
 			for i := range chans {
