@@ -34,8 +34,21 @@ func (ps *localPubSub) Publish(ctx context.Context, topic pubsub.Topic, data *pu
 	data.SetChannel(topic)
 	go func() {
 		defer common.AppRecover()
-		ps.messageQueue <- data
-		log.Println("New event published", data.String(), data.Data())
+
+		// Kiểm tra trạng thái channel
+		log.Printf("Queue length before sending: %d / %d\n", len(ps.messageQueue), cap(ps.messageQueue))
+
+		select {
+		case ps.messageQueue <- data:
+			log.Println("New event published:", data.String(), data.Data())
+		default:
+			log.Println("WARNING: messageQueue is full or closed! Dropping message:", data.String())
+		}
+
+		log.Printf("Queue length after sending: %d / %d\n", len(ps.messageQueue), cap(ps.messageQueue))
+
+		//ps.messageQueue <- data
+		//log.Println("New event published", data.String(), data.Data())
 	}()
 	return nil
 }
