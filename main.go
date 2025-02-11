@@ -3,6 +3,7 @@ package main
 import (
 	_ "Blog-CMS/cmd/swag/docs"
 	"Blog-CMS/component/initialize"
+	"Blog-CMS/component/subscriber"
 	"Blog-CMS/middleware"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -31,6 +32,8 @@ func main() {
 	// load config init
 	r, appCtx := initialize.RunInit()
 	r.Use(middleware.Recover(appCtx))
+
+	_ = subscriber.NewEngine(appCtx).Start()
 
 	blog := r.Group("/blog")
 

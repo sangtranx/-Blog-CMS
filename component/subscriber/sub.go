@@ -1,6 +1,7 @@
 package subscriber
 
 import (
+	"Blog-CMS/common"
 	"Blog-CMS/component/appctx"
 	"Blog-CMS/component/asyncjob"
 	"Blog-CMS/component/pubsub"
@@ -61,6 +62,14 @@ func (e *consumerEngine) StartSubTopic(topic pubsub.Topic, isConcurrent bool, co
 
 // add new subscribers
 func (e *consumerEngine) Start() error {
+	e.StartSubTopic(
+		common.TopicUserLikePost,
+		true,
+		IncreasePostLikeCount(e.appCtx))
 
+	e.StartSubTopic(
+		common.TopicUserDisLikePost,
+		true,
+		DecreasePostLikeCount(e.appCtx))
 	return nil
 }

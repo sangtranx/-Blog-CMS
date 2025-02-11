@@ -4,6 +4,7 @@ import (
 	"Blog-CMS/component/appctx"
 	"Blog-CMS/middleware"
 	posttransport "Blog-CMS/module/post/transport"
+	postliketranspot "Blog-CMS/module/postlike/transport"
 	usertransport "Blog-CMS/module/user/transport"
 
 	"github.com/gin-gonic/gin"
@@ -23,4 +24,8 @@ func SetupGroup(appCtx appctx.AppContext, v1 *gin.RouterGroup) {
 	v1.POST("/post/create", middleware.RequireAuth(appCtx), posttransport.CreateNewPost(appCtx))
 	v1.POST("/post/delete", middleware.RequireAuth(appCtx), posttransport.DeletePost(appCtx))
 	v1.POST("/post/update", middleware.RequireAuth(appCtx), posttransport.UpdatePost(appCtx))
+
+	v1.POST("/post/like", middleware.RequireAuth(appCtx), postliketranspot.UserlikePost(appCtx))
+	v1.DELETE("/post/dislike", middleware.RequireAuth(appCtx), postliketranspot.UserDislikePost(appCtx))
+
 }

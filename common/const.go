@@ -13,8 +13,13 @@ const (
 	CurrentUser = "user"
 )
 
-const(
+const (
 	AdminRole = "admin"
+)
+
+const (
+	TopicUserLikePost    = "TopicUserLikePost"
+	TopicUserDisLikePost = "TopicUserDisLikePost"
 )
 
 type Requester interface {
