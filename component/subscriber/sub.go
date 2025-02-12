@@ -7,6 +7,7 @@ import (
 	"Blog-CMS/component/pubsub"
 	"context"
 	"log"
+	"time"
 )
 
 type GroupJob interface {
@@ -22,7 +23,9 @@ type consumerEngine struct {
 	appCtx appctx.AppContext
 }
 
-func NewEngine(appCtx appctx.AppContext) *consumerEngine { return &consumerEngine{appCtx: appCtx} }
+func NewEngine(appCtx appctx.AppContext) *consumerEngine {
+	return &consumerEngine{appCtx: appCtx}
+}
 
 func (e *consumerEngine) StartSubTopic(topic pubsub.Topic, isConcurrent bool, comsumerJobs ...comsumerJob) error {
 
@@ -40,19 +43,33 @@ func (e *consumerEngine) StartSubTopic(topic pubsub.Topic, isConcurrent bool, co
 
 	go func() {
 		for {
-			msg := <-c
+			select {
+			case msg, ok := <-c:
+				if !ok {
+					log.Println("Channel closed, stopping consumer.")
+					return
+				}
 
-			jobHldArr := make([]asyncjob.Job, len(comsumerJobs))
+				log.Printf("Consumer processing message: %v", msg.Data())
 
-			for i, job := range comsumerJobs {
-				jobhld := getJobHld(&job, msg)
-				jobHldArr[i] = asyncjob.NewJob(jobhld)
-			}
+				// Chỉ tạo và chạy job nếu có message hợp lệ
+				jobHldArr := make([]asyncjob.Job, len(comsumerJobs))
 
-			g := asyncjob.NewGroup(isConcurrent, jobHldArr...)
+				for i, job := range comsumerJobs {
+					jobhld := getJobHld(&job, msg)
+					jobHldArr[i] = asyncjob.NewJob(jobhld)
+				}
 
-			if err := g.Run(context.Background()); err != nil {
-				log.Println(err)
+				g := asyncjob.NewGroup(isConcurrent, jobHldArr...)
+
+				if err := g.Run(context.Background()); err != nil {
+					log.Println(err)
+				}
+
+			default:
+				// Chỉ log trạng thái, không chạy job khi không có message
+				log.Println("Consumer is idle, waiting for messages...")
+				time.Sleep(1 * time.Second) // Tránh CPU 100%
 			}
 		}
 	}()

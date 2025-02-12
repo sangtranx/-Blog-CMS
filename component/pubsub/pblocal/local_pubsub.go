@@ -6,6 +6,7 @@ import (
 	"context"
 	"log"
 	"sync"
+	"time"
 )
 
 // A pubsub run locally
@@ -20,7 +21,7 @@ type localPubSub struct {
 
 func NewPubsub() *localPubSub {
 	pb := &localPubSub{
-		messageQueue: make(chan *pubsub.Message),
+		messageQueue: make(chan *pubsub.Message, 100),
 		mapChannel:   make(map[pubsub.Topic][]chan *pubsub.Message),
 		locker:       new(sync.RWMutex),
 	}
@@ -35,18 +36,19 @@ func (ps *localPubSub) Publish(ctx context.Context, topic pubsub.Topic, data *pu
 	go func() {
 		defer common.AppRecover()
 
-		// Kiểm tra trạng thái channel
-		log.Printf("Queue length before sending: %d / %d\n", len(ps.messageQueue), cap(ps.messageQueue))
+		// Thêm timeout để tránh block vô hạn
+		timeoutCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		log.Printf("Attempting to publish message to topic %s. Queue status: %d/%d",
+			topic, len(ps.messageQueue), cap(ps.messageQueue))
 
 		select {
 		case ps.messageQueue <- data:
-			log.Println("New event published:", data.String(), data.Data())
-		default:
-			log.Println("WARNING: messageQueue is full or closed! Dropping message:", data.String())
+			log.Printf("Successfully published message to topic %s: %v", topic, data.Data())
+		case <-timeoutCtx.Done():
+			log.Printf("ERROR: Timeout publishing message to topic %s: Queue might be full", topic)
 		}
-
-		log.Printf("Queue length after sending: %d / %d\n", len(ps.messageQueue), cap(ps.messageQueue))
-
 		//ps.messageQueue <- data
 		//log.Println("New event published", data.String(), data.Data())
 	}()

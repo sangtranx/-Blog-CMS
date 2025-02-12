@@ -30,7 +30,8 @@ func (biz *userDisLikePost) UserDisLikePost(ctx context.Context, UserId, postId 
 	}
 
 	// send message
-	if err := biz.ps.Publish(ctx, common.TopicUserDisLikePost, pubsub.NewMessage(postlikemodel.PostLike{PostId: postId})); err != nil {
+	postLike := &postlikemodel.PostLike{PostId: postId}
+	if err := biz.ps.Publish(ctx, common.TopicUserDisLikePost, pubsub.NewMessage(postLike)); err != nil {
 		log.Println(err)
 	}
 
