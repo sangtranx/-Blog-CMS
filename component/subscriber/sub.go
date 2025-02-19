@@ -45,7 +45,6 @@ func (e *consumerEngine) StartSubTopic(topic pubsub.Topic, isConcurrent bool, co
 			msg := <-c
 			log.Printf("Consumer processing message: %v", msg.Data())
 
-			// Chỉ tạo và chạy job nếu có message hợp lệ
 			jobHldArr := make([]asyncjob.Job, len(comsumerJobs))
 
 			for i, job := range comsumerJobs {

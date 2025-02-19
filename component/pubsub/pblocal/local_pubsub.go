@@ -6,6 +6,7 @@ import (
 	"context"
 	"log"
 	"sync"
+	"time"
 )
 
 // A pubsub run locally
@@ -83,21 +84,35 @@ func (ps *localPubSub) run() error {
 		defer common.AppRecover()
 
 		for {
-
-			mess := <-ps.messageQueue
-			log.Println("message dequeue : ", mess)
-
-			if subs, ok := ps.mapChannel[mess.Channel()]; ok {
-				for i := range subs {
-					go func(c chan *pubsub.Message) {
-						defer common.AppRecover()
-						c <- mess
-					}(subs[i])
-				}
+			select {
+			case mess := <-ps.messageQueue: // recieved message from queue
+				log.Println("Message dequeued:", mess)
+				ps.dispatchMessage(mess)
+			default:
+				time.Sleep(1 * time.Second) // reduce loading CPU
 			}
 		}
-
 	}()
 
 	return nil
+}
+
+func (ps *localPubSub) dispatchMessage(msg *pubsub.Message) {
+	ps.locker.RLock()
+	subs, ok := ps.mapChannel[msg.Channel()]
+	ps.locker.RUnlock()
+
+	if ok {
+		for _, sub := range subs {
+			go func(c chan *pubsub.Message) {
+				defer common.AppRecover()
+				select {
+				case c <- msg:
+					log.Println("Message sent to subscriber")
+				default:
+					log.Println("Warning: Subscriber channel is full, dropping message")
+				}
+			}(sub)
+		}
+	}
 }
