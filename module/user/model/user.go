@@ -3,6 +3,7 @@ package usermodel
 import (
 	"Blog-CMS/common"
 	"errors"
+	"strings"
 )
 
 const EntityName = "User"
@@ -53,6 +54,13 @@ type UserCreate struct {
 	Role            string `json:"role" gorm:"column:role"`
 }
 
+func (u *UserCreate) Validate() error {
+	if !strings.HasSuffix(u.Email, "@gmail.com") {
+		return ErrNotAnEmail
+	}
+	return nil
+}
+
 func (UserCreate) TableName() string { return User{}.TableName() }
 
 func (u *UserCreate) Mask(isAdmin bool) {
@@ -83,4 +91,9 @@ var (
 		errors.New("email has already existed"),
 		"email has already existed",
 		"ErrEmailExisted")
+
+	ErrNotAnEmail = common.NewCustomError(
+		errors.New("Please using an email"),
+		"Please using an email",
+		"ErrNotAnEmail")
 )

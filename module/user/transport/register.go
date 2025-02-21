@@ -33,6 +33,11 @@ func Register(appCtx appctx.AppContext) func(ctx *gin.Context) {
 			panic(err)
 		}
 
+		// validate data
+		if err := data.Validate(); err != nil {
+			panic(err)
+		}
+
 		storage := userstorage.NewSqlStorage(db)
 		hasher := hasher2.NewSha256Hash()
 		biz := userbiz.NewRegisterUserBusiness(storage, hasher)
