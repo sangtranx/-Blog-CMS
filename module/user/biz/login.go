@@ -37,25 +37,30 @@ func (business *LoginBusiness) Login(ctx context.Context, data usermodel.UserLog
 	user, err := business.storage.FindUser(ctx, map[string]interface{}{"email": data.Email})
 
 	if err != nil {
-		return nil, usermodel.ErrEmailExisted
+		return nil, usermodel.ErrEmailnameOrPasswordInvalid
 	}
 
 	pwd := business.hasher.Hash(data.Password + user.Salt)
 
 	if user.Password != pwd {
+		// register password fail
+		data.RegisterFailedAttempt()
 		return nil, usermodel.ErrEmailnameOrPasswordInvalid
 	}
 
 	payload := tokenprovider.TokenPayload{
 		UserId: user.Id,
-		Role: user.Role,
+		Role:   user.Role,
 	}
 
-	accessToken, err := business.tokenProvider.Generate(payload,business.expiry)
+	accessToken, err := business.tokenProvider.Generate(payload, business.expiry)
 
 	if err != nil {
 		return nil, common.ErrInternal(err)
 	}
+
+	// delete failed attempt
+	data.ResetAttempts()
 
 	return accessToken, nil
 }

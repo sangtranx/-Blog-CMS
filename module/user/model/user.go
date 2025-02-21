@@ -5,6 +5,7 @@ import (
 	"errors"
 	"regexp"
 	"strings"
+	"time"
 )
 
 const EntityName = "User"
@@ -126,6 +127,41 @@ type UserLogin struct {
 	Password string `json:"password" gorm:"password"`
 }
 
+var (
+	loginAttempts = make(map[string]int)
+	blockTime     = make(map[string]time.Time)
+)
+
+const (
+	maxAttempts   = 3
+	blockDuration = 5 * time.Minute
+)
+
+func (u *UserLogin) ValidateBlock() error {
+	if blockUntil, found := blockTime[u.Email]; found {
+		if time.Now().Before(blockUntil) {
+			return ErrTooManyLoginAttempts
+		}
+
+		delete(loginAttempts, u.Email)
+		delete(blockTime, u.Email)
+	}
+
+	return nil
+}
+
+func (u *UserLogin) RegisterFailedAttempt() {
+	loginAttempts[u.Email]++
+	if loginAttempts[u.Email] >= maxAttempts {
+		blockTime[u.Email] = time.Now().Add(blockDuration)
+	}
+}
+
+func (u *UserLogin) ResetAttempts() {
+	delete(loginAttempts, u.Email)
+	delete(blockTime, u.Email)
+}
+
 type UserChangePd struct {
 	Password string `json:"password" gorm:"password"`
 }
@@ -175,4 +211,10 @@ var (
 		errors.New("password cannot contain whitespace"),
 		"password cannot contain whitespace",
 		"ErrPasswordContainsWhitespace")
+
+	ErrTooManyLoginAttempts = common.NewCustomError(
+		errors.New("too many failed login attempts, please try again later"),
+		"too many failed login attempts, please try again later",
+		"ErrTooManyLoginAttempts",
+	)
 )
