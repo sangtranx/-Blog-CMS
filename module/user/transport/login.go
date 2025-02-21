@@ -49,7 +49,7 @@ func Login(appCtx appctx.AppContext) func(ctx *gin.Context) {
 		account, err := biz.Login(c.Request.Context(), data)
 
 		if err != nil {
-			common.ErrInvalidRequest(err)
+			panic(err)
 		}
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(account))
