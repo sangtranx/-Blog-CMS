@@ -2,7 +2,10 @@ package usermodel
 
 import (
 	"Blog-CMS/common"
+	"Blog-CMS/component/appctx"
+	"context"
 	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 	"time"
@@ -127,39 +130,56 @@ type UserLogin struct {
 	Password string `json:"password" gorm:"password"`
 }
 
-var (
-	loginAttempts = make(map[string]int)
-	blockTime     = make(map[string]time.Time)
-)
-
 const (
 	maxAttempts   = 3
 	blockDuration = 5 * time.Minute
 )
 
-func (u *UserLogin) ValidateBlock() error {
-	if blockUntil, found := blockTime[u.Email]; found {
-		if time.Now().Before(blockUntil) {
+func (u *UserLogin) ValidateBlock(appCtx appctx.AppContext) error {
+	redisClient := appCtx.GetRedisDBConnection()
+	ctx := context.Background()
+
+	blockKey := fmt.Sprintf("block:%s", u.Email)
+	attemptsKey := fmt.Sprintf("attempts:%s", u.Email)
+
+	blockUntilStr, err := redisClient.Get(ctx, blockKey).Result()
+	if err == nil {
+		blockUntil, parseErr := time.Parse(time.RFC3339, blockUntilStr)
+		if parseErr == nil && time.Now().Before(blockUntil) {
 			return ErrTooManyLoginAttempts
 		}
-
-		delete(loginAttempts, u.Email)
-		delete(blockTime, u.Email)
+		redisClient.Del(ctx, blockKey)
+		redisClient.Del(ctx, attemptsKey)
 	}
 
 	return nil
 }
 
-func (u *UserLogin) RegisterFailedAttempt() {
-	loginAttempts[u.Email]++
-	if loginAttempts[u.Email] >= maxAttempts {
-		blockTime[u.Email] = time.Now().Add(blockDuration)
+func (u *UserLogin) RegisterFailedAttempt(appCtx appctx.AppContext) {
+	redisClient := appCtx.GetRedisDBConnection()
+	ctx := context.Background()
+
+	attemptsKey := fmt.Sprintf("attempts:%s", u.Email)
+	blockKey := fmt.Sprintf("block:%s", u.Email)
+
+	attempts, _ := redisClient.Incr(ctx, attemptsKey).Result()
+
+	if attempts >= maxAttempts {
+		blockUntil := time.Now().Add(blockDuration)
+		redisClient.Set(ctx, blockKey, blockUntil.Format(time.RFC3339), blockDuration)
+		redisClient.Del(ctx, attemptsKey)
 	}
 }
 
-func (u *UserLogin) ResetAttempts() {
-	delete(loginAttempts, u.Email)
-	delete(blockTime, u.Email)
+func (u *UserLogin) ResetAttempts(appCtx appctx.AppContext) {
+	redisClient := appCtx.GetRedisDBConnection()
+	ctx := context.Background()
+
+	attemptsKey := fmt.Sprintf("attempts:%s", u.Email)
+	blockKey := fmt.Sprintf("block:%s", u.Email)
+
+	redisClient.Del(ctx, attemptsKey)
+	redisClient.Del(ctx, blockKey)
 }
 
 type UserChangePd struct {

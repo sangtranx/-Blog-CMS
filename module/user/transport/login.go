@@ -37,7 +37,7 @@ func Login(appCtx appctx.AppContext) func(ctx *gin.Context) {
 		}
 
 		// validate data
-		if err := data.ValidateBlock(); err != nil {
+		if err := data.ValidateBlock(appCtx); err != nil {
 			panic(err)
 		}
 
@@ -46,7 +46,7 @@ func Login(appCtx appctx.AppContext) func(ctx *gin.Context) {
 		hasher := hasher2.NewSha256Hash()
 
 		biz := userbiz.NewLoginBusiness(storage, tokenProvider, hasher, 60*60*24*30)
-		account, err := biz.Login(c.Request.Context(), data)
+		account, err := biz.Login(c.Request.Context(), appCtx, data)
 
 		if err != nil {
 			panic(err)

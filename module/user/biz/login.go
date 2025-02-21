@@ -2,6 +2,7 @@ package userbiz
 
 import (
 	"Blog-CMS/common"
+	"Blog-CMS/component/appctx"
 	"Blog-CMS/component/tokenprovider"
 	usermodel "Blog-CMS/module/user/model"
 	"context"
@@ -32,7 +33,11 @@ func NewLoginBusiness(storage LoginStorage, tokenProvider tokenprovider.Provider
 // 3.Provider: issue JWT token for client
 // 4. Return token(s)
 
-func (business *LoginBusiness) Login(ctx context.Context, data usermodel.UserLogin) (*tokenprovider.Token, error) {
+func (business *LoginBusiness) Login(
+	ctx context.Context,
+	appCtx appctx.AppContext,
+	data usermodel.UserLogin,
+) (*tokenprovider.Token, error) {
 
 	user, err := business.storage.FindUser(ctx, map[string]interface{}{"email": data.Email})
 
@@ -44,7 +49,7 @@ func (business *LoginBusiness) Login(ctx context.Context, data usermodel.UserLog
 
 	if user.Password != pwd {
 		// register password fail
-		data.RegisterFailedAttempt()
+		data.RegisterFailedAttempt(appCtx)
 		return nil, usermodel.ErrEmailnameOrPasswordInvalid
 	}
 
@@ -60,7 +65,7 @@ func (business *LoginBusiness) Login(ctx context.Context, data usermodel.UserLog
 	}
 
 	// delete failed attempt
-	data.ResetAttempts()
+	data.ResetAttempts(appCtx)
 
 	return accessToken, nil
 }
