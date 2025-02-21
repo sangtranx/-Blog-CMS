@@ -3,6 +3,7 @@ package usermodel
 import (
 	"Blog-CMS/common"
 	"errors"
+	"regexp"
 	"strings"
 )
 
@@ -55,9 +56,57 @@ type UserCreate struct {
 }
 
 func (u *UserCreate) Validate() error {
+
+	if err := u.validateEmail(); err != nil {
+		return err
+	}
+
+	if err := u.ValidatePassword(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *UserCreate) validateEmail() error {
 	if !strings.HasSuffix(u.Email, "@gmail.com") {
 		return ErrNotAnEmail
 	}
+	return nil
+}
+
+func (u *UserCreate) ValidatePassword() error {
+	// Check length requirement (8-50 characters)
+	if len(u.Password) < 8 || len(u.Password) > 50 {
+		return ErrPasswordTooShort
+	}
+
+	// Check for at least one uppercase letter (A-Z)
+	if matched, _ := regexp.MatchString(`[A-Z]`, u.Password); !matched {
+		return ErrPasswordMissingUppercase
+	}
+
+	// Check for at least one lowercase letter (a-z)
+	if matched, _ := regexp.MatchString(`[a-z]`, u.Password); !matched {
+		return ErrPasswordMissingLowercase
+	}
+
+	// Check for at least one numeric digit (0-9)
+	if matched, _ := regexp.MatchString(`[0-9]`, u.Password); !matched {
+		return ErrPasswordMissingNumber
+	}
+
+	// Check for at least one special character (!@#$%^&* and others)
+	if matched, _ := regexp.MatchString(`[!@#$%^&*()_+\-=\[\]{};':",.<>?/\\|]`, u.Password); !matched {
+		return ErrPasswordMissingSpecialChar
+	}
+
+	// Ensure the password does not contain any whitespace characters
+	if matched, _ := regexp.MatchString(`\s`, u.Password); matched {
+		return ErrPasswordContainsWhitespace
+	}
+
+	// If all checks pass, return nil (valid password)
 	return nil
 }
 
@@ -96,4 +145,34 @@ var (
 		errors.New("Please using an email"),
 		"Please using an email",
 		"ErrNotAnEmail")
+
+	ErrPasswordTooShort = common.NewCustomError(
+		errors.New("password must be between 8 and 50 characters"),
+		"password must be between 8 and 50 characters",
+		"ErrPasswordTooShort")
+
+	ErrPasswordMissingUppercase = common.NewCustomError(
+		errors.New("password must contain at least 1 uppercase letter"),
+		"password must contain at least 1 uppercase letter",
+		"ErrPasswordMissingUppercase")
+
+	ErrPasswordMissingLowercase = common.NewCustomError(
+		errors.New("password must contain at least 1 lowercase letter"),
+		"password must contain at least 1 lowercase letter",
+		"ErrPasswordMissingLowercase")
+
+	ErrPasswordMissingNumber = common.NewCustomError(
+		errors.New("password must contain at least 1 number"),
+		"password must contain at least 1 number",
+		"ErrPasswordMissingNumber")
+
+	ErrPasswordMissingSpecialChar = common.NewCustomError(
+		errors.New("password must contain at least 1 special character (!@#$%^&*)"),
+		"password must contain at least 1 special character (!@#$%^&*)",
+		"ErrPasswordMissingSpecialChar")
+
+	ErrPasswordContainsWhitespace = common.NewCustomError(
+		errors.New("password cannot contain whitespace"),
+		"password cannot contain whitespace",
+		"ErrPasswordContainsWhitespace")
 )
