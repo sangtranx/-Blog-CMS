@@ -34,7 +34,7 @@ func (u *User) GetRole() string {
 }
 
 func (u *User) GetPassword() string {
-	return u.Role
+	return u.Password
 }
 
 func (User) TableName() string {
