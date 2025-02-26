@@ -27,91 +27,80 @@ type DeepSeekResponse struct {
 }
 
 func main() {
-	// Thông tin API
 	apiKey := ""
 	url := "https://api.deepseek.com/v1/chat/completions"
 
-	// Tạo request body
 	requestBody := DeepSeekRequest{
 		Model: "deepseek-chat",
 		Messages: []Message{
 			{
 				Role:    "user",
-				Content: "Xin chào, bạn khỏe không? Hôm nay thời tiết thế nào?",
+				Content: "Hello, How are you?",
 			},
 		},
 	}
 
-	// Chuyển request body thành JSON
 	jsonData, err := json.Marshal(requestBody)
 	if err != nil {
-		fmt.Println("Lỗi khi mã hóa JSON:", err)
+		fmt.Println("Error while encoding JSON:", err)
 		return
 	}
 
-	// Tạo HTTP request
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
-		fmt.Println("Lỗi khi tạo request:", err)
+		fmt.Println("Error creating request:", err)
 		return
 	}
 
-	// Thêm header cho request
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 
-	// Gửi request
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Lỗi khi gửi request:", err)
+		fmt.Println("Error sending request:", err)
 		return
 	}
 	defer resp.Body.Close()
 
-	// Kiểm tra mã trạng thái HTTP
-	fmt.Println("Mã trạng thái HTTP:", resp.StatusCode)
+	fmt.Println("HTTP Status Code:", resp.StatusCode)
 	switch resp.StatusCode {
 	case 200:
-		fmt.Println("Yêu cầu thành công, đang xử lý phản hồi...")
+		fmt.Println("Yrequest successful, processing response...")
 	case 401:
-		fmt.Println("Lỗi: API key không hợp lệ.")
+		fmt.Println("Error: Invalid API key.")
 		return
 	case 403:
-		fmt.Println("Lỗi: Không có quyền truy cập API.")
+		fmt.Println("Error: No API access.")
 		return
 	case 429:
-		fmt.Println("Lỗi: Vượt quá giới hạn yêu cầu.")
+		fmt.Println("Error: Request limit exceeded.")
 		return
 	case 500:
-		fmt.Println("Lỗi: Server API gặp sự cố.")
+		fmt.Println("Error: API server encountered a problem.")
 		return
 	default:
-		fmt.Println("Lỗi: Mã trạng thái không xác định:", resp.StatusCode)
+		fmt.Println("Error: Unknown status code:", resp.StatusCode)
 	}
 
-	// Đọc response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Lỗi khi đọc response:", err)
+		fmt.Println("Error reading response :", err)
 		return
 	}
 
-	// In nội dung phản hồi từ server
-	fmt.Println("Phản hồi từ server:", string(body))
+	fmt.Println("Response from server:", string(body))
 
-	// Parse response JSON
 	var deepSeekResp DeepSeekResponse
 	err = json.Unmarshal(body, &deepSeekResp)
 	if err != nil {
-		fmt.Println("Lỗi khi parse JSON response:", err)
+		fmt.Println("Error when parsing JSON response:", err)
 		return
 	}
 
-	// Kiểm tra và in câu trả lời
 	if len(deepSeekResp.Choices) > 0 {
-		fmt.Println("Câu trả lời từ DeepSeek:", deepSeekResp.Choices[0].Message.Content)
+		fmt.Println("Answer from DeepSeek:", deepSeekResp.Choices[0].Message.Content)
 	} else {
-		fmt.Println("Không nhận được câu trả lời từ API. Vui lòng kiểm tra mã trạng thái và nội dung phản hồi ở trên.")
+		fmt.Println("No response received from API. Please check status code and response content above.")
 	}
 }
