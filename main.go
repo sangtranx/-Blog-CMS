@@ -39,7 +39,7 @@ func main() {
 
 	SetupAdminRoute(appCtx, blog)
 	SetupGroup(appCtx, blog)
-
+	SetupChatAi(appCtx, blog)
 	// Generate swagger docs
 	generateSwaggerDocs()
 	// Swagger route

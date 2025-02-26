@@ -1,5 +1,25 @@
 basePath: /blog/
 definitions:
+  chatmodel.DeepSeekRequest:
+    properties:
+      api_key:
+        type: string
+      api_url:
+        type: string
+      messages:
+        items:
+          $ref: '#/definitions/chatmodel.Message'
+        type: array
+      model:
+        type: string
+    type: object
+  chatmodel.Message:
+    properties:
+      content:
+        type: string
+      role:
+        type: string
+    type: object
   common.AppError:
     properties:
       key:
@@ -184,6 +204,47 @@ paths:
       summary: Change password a user's password
       tags:
       - users
+  /deepseek/chat:
+    post:
+      consumes:
+      - application/json
+      description: Chat with deepseek ai
+      parameters:
+      - description: Bearer <Token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: adding request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/chatmodel.DeepSeekRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SuccessRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/common.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Chat with deepseek ai
+      tags:
+      - AI
   /login:
     post:
       consumes:

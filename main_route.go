@@ -27,5 +27,4 @@ func SetupGroup(appCtx appctx.AppContext, v1 *gin.RouterGroup) {
 
 	v1.POST("/post/like", middleware.RequireAuth(appCtx), postliketranspot.UserlikePost(appCtx))
 	v1.DELETE("/post/dislike", middleware.RequireAuth(appCtx), postliketranspot.UserDislikePost(appCtx))
-
 }

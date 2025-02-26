@@ -28,7 +28,7 @@ type DeepSeekResponse struct {
 
 func main() {
 	// Thông tin API
-	apiKey := "sk-e649ed44f8034b51a11c424026712813"
+	apiKey := ""
 	url := "https://api.deepseek.com/v1/chat/completions"
 
 	// Tạo request body

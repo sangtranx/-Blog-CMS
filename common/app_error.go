@@ -148,4 +148,20 @@ func ErrNotPermission(err error) *AppError {
 	)
 }
 
+func ErrMarshalEntity(entity string, err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("Cannot marshal %s", strings.ToLower(entity)),
+		fmt.Sprintf("ErrMarshalEntity%s", entity),
+	)
+}
+
+func ErrUnmarshalEntity(entity string, err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("Cannot Unmarshal %s", strings.ToLower(entity)),
+		fmt.Sprintf("ErrUmarshalEntity%s", entity),
+	)
+}
+
 var RecordNotFound = errors.New("record not found")
