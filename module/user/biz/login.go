@@ -6,6 +6,7 @@ import (
 	"Blog-CMS/component/tokenprovider"
 	usermodel "Blog-CMS/module/user/model"
 	"context"
+	"crypto/subtle"
 )
 
 type LoginStorage interface {
@@ -48,7 +49,8 @@ func (business *LoginBusiness) Login(
 	pwd := business.hasher.Hash(data.Password + user.Salt)
 	redis := appCtx.GetRedisDBConnection()
 
-	if user.Password != pwd {
+	//Compare the passwords in constant time
+	if subtle.ConstantTimeCompare([]byte(user.Password), []byte(pwd)) != 1 {
 		// register password fail
 		data.RegisterFailedAttempt(redis)
 		return nil, usermodel.ErrEmailnameOrPasswordInvalid
