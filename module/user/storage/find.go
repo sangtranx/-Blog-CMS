@@ -8,7 +8,7 @@ import (
 
 func (s *sqlStorage) FindUser(ctx context.Context, conditions map[string]interface{}, moreInfos ...string) (*usermodel.User, error) {
 
-	db := s.db
+	db := s.db.WithContext(ctx) //use context to set timeout for db query
 
 	var user usermodel.User
 

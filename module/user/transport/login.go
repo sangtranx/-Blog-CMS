@@ -35,9 +35,8 @@ func Login(appCtx appctx.AppContext) func(ctx *gin.Context) {
 		if err := c.ShouldBindJSON(&data); err != nil {
 			panic(err)
 		}
-
 		// validate data
-		if err := data.ValidateBlock(appCtx); err != nil {
+		if err := data.ValidateBlock(appCtx.GetRedisDBConnection()); err != nil {
 			panic(err)
 		}
 

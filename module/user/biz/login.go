@@ -46,10 +46,11 @@ func (business *LoginBusiness) Login(
 	}
 
 	pwd := business.hasher.Hash(data.Password + user.Salt)
+	redis := appCtx.GetRedisDBConnection()
 
 	if user.Password != pwd {
 		// register password fail
-		data.RegisterFailedAttempt(appCtx)
+		data.RegisterFailedAttempt(redis)
 		return nil, usermodel.ErrEmailnameOrPasswordInvalid
 	}
 
@@ -65,7 +66,7 @@ func (business *LoginBusiness) Login(
 	}
 
 	// delete failed attempt
-	data.ResetAttempts(appCtx)
+	data.ResetAttempts(redis)
 
 	return accessToken, nil
 }

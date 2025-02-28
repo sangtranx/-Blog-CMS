@@ -2,10 +2,10 @@ package usermodel
 
 import (
 	"Blog-CMS/common"
-	"Blog-CMS/component/appctx"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/redis/go-redis/v9"
 	"regexp"
 	"strings"
 	"time"
@@ -135,51 +135,48 @@ const (
 	blockDuration = 5 * time.Minute
 )
 
-func (u *UserLogin) ValidateBlock(appCtx appctx.AppContext) error {
-	redisClient := appCtx.GetRedisDBConnection()
+func (u *UserLogin) ValidateBlock(redis *redis.Client) error {
 	ctx := context.Background()
 
 	blockKey := fmt.Sprintf("block:%s", u.Email)
 	attemptsKey := fmt.Sprintf("attempts:%s", u.Email)
 
-	blockUntilStr, err := redisClient.Get(ctx, blockKey).Result()
+	blockUntilStr, err := redis.Get(ctx, blockKey).Result()
 	if err == nil {
 		blockUntil, parseErr := time.Parse(time.RFC3339, blockUntilStr)
 		if parseErr == nil && time.Now().Before(blockUntil) {
 			return ErrTooManyLoginAttempts
 		}
-		redisClient.Del(ctx, blockKey)
-		redisClient.Del(ctx, attemptsKey)
+		redis.Del(ctx, blockKey)
+		redis.Del(ctx, attemptsKey)
 	}
 
 	return nil
 }
 
-func (u *UserLogin) RegisterFailedAttempt(appCtx appctx.AppContext) {
-	redisClient := appCtx.GetRedisDBConnection()
+func (u *UserLogin) RegisterFailedAttempt(redis *redis.Client) {
 	ctx := context.Background()
 
 	attemptsKey := fmt.Sprintf("attempts:%s", u.Email)
 	blockKey := fmt.Sprintf("block:%s", u.Email)
 
-	attempts, _ := redisClient.Incr(ctx, attemptsKey).Result()
+	attempts, _ := redis.Incr(ctx, attemptsKey).Result()
 
 	if attempts >= maxAttempts {
 		blockUntil := time.Now().Add(blockDuration)
-		redisClient.Set(ctx, blockKey, blockUntil.Format(time.RFC3339), blockDuration)
-		redisClient.Del(ctx, attemptsKey)
+		redis.Set(ctx, blockKey, blockUntil.Format(time.RFC3339), blockDuration)
+		redis.Del(ctx, attemptsKey)
 	}
 }
 
-func (u *UserLogin) ResetAttempts(appCtx appctx.AppContext) {
-	redisClient := appCtx.GetRedisDBConnection()
+func (u *UserLogin) ResetAttempts(redis *redis.Client) {
 	ctx := context.Background()
 
 	attemptsKey := fmt.Sprintf("attempts:%s", u.Email)
 	blockKey := fmt.Sprintf("block:%s", u.Email)
 
-	redisClient.Del(ctx, attemptsKey)
-	redisClient.Del(ctx, blockKey)
+	redis.Del(ctx, attemptsKey)
+	redis.Del(ctx, blockKey)
 }
 
 type UserChangePd struct {
