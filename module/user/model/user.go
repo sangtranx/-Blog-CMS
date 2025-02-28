@@ -56,6 +56,14 @@ type UserCreate struct {
 	Role            string `json:"role" gorm:"column:role"`
 }
 
+var (
+	uppercaseRegex  = regexp.MustCompile(`[A-Z]`)
+	lowercaseRegex  = regexp.MustCompile(`[a-z]`)
+	digitRegex      = regexp.MustCompile(`[0-9]`)
+	specialRegex    = regexp.MustCompile(`[!@#$%^&*()_+\-=\[\]{};':",.<>?/\\|]`)
+	whitespaceRegex = regexp.MustCompile(`\s`)
+)
+
 func (u *UserCreate) Validate() error {
 
 	if err := u.validateEmail(); err != nil {
@@ -83,27 +91,27 @@ func (u *UserCreate) ValidatePassword() error {
 	}
 
 	// Check for at least one uppercase letter (A-Z)
-	if matched, _ := regexp.MatchString(`[A-Z]`, u.Password); !matched {
+	if !uppercaseRegex.MatchString(u.Password) {
 		return ErrPasswordMissingUppercase
 	}
 
 	// Check for at least one lowercase letter (a-z)
-	if matched, _ := regexp.MatchString(`[a-z]`, u.Password); !matched {
+	if !lowercaseRegex.MatchString(u.Password) {
 		return ErrPasswordMissingLowercase
 	}
 
 	// Check for at least one numeric digit (0-9)
-	if matched, _ := regexp.MatchString(`[0-9]`, u.Password); !matched {
+	if !digitRegex.MatchString(u.Password) {
 		return ErrPasswordMissingNumber
 	}
 
 	// Check for at least one special character (!@#$%^&* and others)
-	if matched, _ := regexp.MatchString(`[!@#$%^&*()_+\-=\[\]{};':",.<>?/\\|]`, u.Password); !matched {
+	if !specialRegex.MatchString(u.Password) {
 		return ErrPasswordMissingSpecialChar
 	}
 
 	// Ensure the password does not contain any whitespace characters
-	if matched, _ := regexp.MatchString(`\s`, u.Password); matched {
+	if !whitespaceRegex.MatchString(u.Password) {
 		return ErrPasswordContainsWhitespace
 	}
 
