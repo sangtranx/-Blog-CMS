@@ -111,7 +111,7 @@ func (u *UserCreate) ValidatePassword() error {
 	}
 
 	// Ensure the password does not contain any whitespace characters
-	if !whitespaceRegex.MatchString(u.Password) {
+	if whitespaceRegex.MatchString(u.Password) {
 		return ErrPasswordContainsWhitespace
 	}
 
