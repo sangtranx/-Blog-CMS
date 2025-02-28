@@ -4,11 +4,16 @@ import (
 	"Blog-CMS/common"
 	usermodel "Blog-CMS/module/user/model"
 	"context"
+	"time"
 )
 
 func (s *sqlStorage) FindUser(ctx context.Context, conditions map[string]interface{}, moreInfos ...string) (*usermodel.User, error) {
 
-	db := s.db.WithContext(ctx) //use context to set timeout for db query
+	// create a timeout context
+	timeoutCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	db := s.db.WithContext(timeoutCtx) //use context to set timeout for db query
 
 	var user usermodel.User
 
